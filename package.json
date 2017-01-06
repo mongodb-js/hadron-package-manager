@@ -34,7 +34,7 @@
     "mongodb-js-fmt": "^0.0.3",
     "mongodb-js-precommit": "^0.2.9",
     "pre-commit": "^1.1.2",
-    "react": "^15.3.2",
+    "react": "^15.4.2",
     "sinon": "^1.17.6"
   }
 }
