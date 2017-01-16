@@ -25,7 +25,7 @@
   "dependencies": {
     "debug": "^2.2.0",
     "lodash": "^4.6.1",
-    "reflux": "^0.4.0"
+    "reflux": "^6.0.0"
   },
   "devDependencies": {
     "chai": "^3.4.1",
