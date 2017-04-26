@@ -8,15 +8,20 @@ const PackageManager = require('../lib/package-manager');
 
 describe('PackageManager', function() {
   describe('#activate', function() {
-    var packagesPath = path.join(__dirname, 'packages');
-    var manager;
+    const packagesPath = path.join(__dirname, 'packages');
+    const intPackagesPath = path.join(__dirname, 'internal-packages');
+    let manager;
     beforeEach(function() {
-      manager = new PackageManager(packagesPath, __dirname, ['external-packages/example3']);
+      manager = new PackageManager(
+        [ intPackagesPath, packagesPath ],
+        __dirname,
+        ['external-packages/example3']
+      );
     });
 
     it('activates all the packages', function(done) {
-      var unsubscribe = Action.packageActivationCompleted.listen(function() {
-        expect(manager.packages).to.have.length(3);
+      const unsubscribe = Action.packageActivationCompleted.listen(function() {
+        expect(manager.packages).to.have.length(6);
         unsubscribe();
         done();
       });
@@ -25,7 +30,7 @@ describe('PackageManager', function() {
 
     it('only calls Action.packageActivationCompleted once', function(done) {
       const spy = sinon.spy();
-      var unsubscribe = Action.packageActivationCompleted.listen(spy);
+      const unsubscribe = Action.packageActivationCompleted.listen(spy);
       setTimeout(function() {
         expect(spy.callCount).to.be.equal(1);
         unsubscribe();
@@ -36,7 +41,7 @@ describe('PackageManager', function() {
   });
 
   describe('#new', function() {
-    var manager = new PackageManager();
+    const manager = new PackageManager();
 
     it('initializes empty packages', function() {
       expect(manager.packages).to.have.length(0);
