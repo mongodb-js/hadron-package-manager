@@ -65,7 +65,7 @@ describe('Plugin', () => {
       });
 
       it('sets the plugin error', () => {
-        expect(plugin.error.message).to.include('Cannot find module');
+        expect(plugin.error.message).to.include('Unexpected string');
       });
     });
   });
@@ -85,14 +85,34 @@ describe('Plugin', () => {
   });
 
   describe('#new', () => {
-    const plugin = new Plugin(testPluginPath);
+    context('when a package.json exists', () => {
+      const plugin = new Plugin(testPluginPath);
 
-    it('sets the plugin path', () => {
-      expect(plugin.pluginPath).to.equal(testPluginPath);
+      it('sets the plugin path', () => {
+        expect(plugin.pluginPath).to.equal(testPluginPath);
+      });
+
+      it('parses the package.json and sets the metadata', () => {
+        expect(plugin.metadata.name).to.equal('test-plugin');
+      });
     });
 
-    it('parses the package.json and sets the metadata', () => {
-      expect(plugin.metadata.name).to.equal('test-plugin');
+    context('when a package.json does not exist', () => {
+      const badPluginPath = path.join(__dirname, 'internal-plugins', 'example6');
+      const plugin = new Plugin(badPluginPath);
+
+      it('sets the plugin path', () => {
+        expect(plugin.pluginPath).to.equal(badPluginPath);
+      });
+
+      it('sets the metadata name to the plugin dir basename', () => {
+        expect(plugin.metadata.name).to.equal('example6');
+      });
+
+      it('sets the error', () => {
+        const fileName = path.join(plugin.pluginPath, 'package.json');
+        expect(plugin.error.message).to.equal(`Cannot find module '${fileName}'`);
+      });
     });
   });
 });
